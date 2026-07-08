@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eBayデベロッパープログラム 登録ガイド｜API連携の第一歩</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+            font-size: 16px;
+            line-height: 1.85;
+            color: #333;
+            background: #f4f6f9;
+        }
+
+        a { color: #0064d2; }
+
+        /* ===== Header ===== */
+        .header {
+            background: linear-gradient(135deg, #0064d2 0%, #003f86 100%);
+            color: white;
+            padding: 48px 24px 40px;
+            text-align: center;
+        }
+        .header .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 20px;
+            padding: 4px 16px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            letter-spacing: 0.05em;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .header p {
+            font-size: 1rem;
+            opacity: 0.88;
+        }
+
+        /* ===== Layout ===== */
+        .container {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 36px 20px 60px;
+        }
+
+        /* ===== Section Card ===== */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .card-header {
+            background: #f0f4fb;
+            border-bottom: 1px solid #dce5f5;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header .icon {
+            font-size: 1.4rem;
+        }
+        .card-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0064d2;
+        }
+        .card-body {
+            padding: 28px;
+        }
+
+        /* ===== Steps ===== */
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 22px;
+            border-bottom: 1px dashed #e8ecf2;
+        }
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .step-num {
+            width: 36px;
+            height: 36px;
+            background: #0064d2;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .step-text h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #003f86;
+            margin-bottom: 6px;
+        }
+        .step-text p {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        /* ===== Info Boxes ===== */
+        .note {
+            background: #e8f0fe;
+            border-left: 4px solid #0064d2;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.93rem;
+            color: #1a3a6e;
+        }
+        .note strong { color: #003f86; }
+
+        .warning {
+            background: #fff8e1;
+            border-left: 4px solid #f5a623;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.93rem;
+            color: #5a3e00;
+        }
+        .warning strong { color: #7a5200; }
+
+        .success {
+            background: #e8f5e9;
+            border-left: 4px solid #43a047;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.93rem;
+            color: #1b5e20;
+        }
+
+        /* ===== Checklist ===== */
+        .checklist {
+            list-style: none;
+            margin: 12px 0;
+        }
+        .checklist li {
+            padding: 8px 0 8px 32px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.95rem;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist li::before {
+            content: '✓';
+            position: absolute;
+            left: 6px;
+            color: #43a047;
+            font-weight: 700;
+        }
+
+        /* ===== FAQ ===== */
+        .faq-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .faq-q {
+            font-weight: 700;
+            color: #003f86;
+            margin-bottom: 8px;
+            font-size: 0.97rem;
+        }
+        .faq-q::before {
+            content: 'Q. ';
+            color: #0064d2;
+        }
+        .faq-a {
+            color: #555;
+            font-size: 0.93rem;
+            padding-left: 24px;
+        }
+        .faq-a::before {
+            content: 'A. ';
+            font-weight: 700;
+            color: #43a047;
+        }
+
+        /* ===== Flow Summary ===== */
+        .flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 16px 0;
+        }
+        .flow-box {
+            background: #0064d2;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-align: center;
+            min-width: 100px;
+        }
+        .flow-box.gray { background: #78909c; }
+        .flow-arrow {
+            color: #0064d2;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* ===== Button Link ===== */
+        .btn {
+            display: inline-block;
+            background: #0064d2;
+            color: white;
+            border-radius: 8px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #0052b0; color: white; }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 32px 20px;
+            color: #888;
+            font-size: 0.85rem;
+            border-top: 1px solid #ddd;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="badge">🔑 初級ガイド</div>
+    <h1>eBayデベロッパープログラム<br>登録ガイド</h1>
+    <p>シッピングポリシースクリプトなどのAPI連携ツールを使うための第一歩</p>
+</div>
+
+<div class="container">
+
+    <!-- 全体の流れ -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🗺️</span>
+            <h2>全体の流れ</h2>
+        </div>
+        <div class="card-body">
+            <div class="flow">
+                <div class="flow-box">① 登録フォーム送信</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box gray">② 1営業日で承認</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">③ APIキー取得</div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-box">④ ツール利用開始</div>
+            </div>
+            <div class="note">
+                <strong>所要時間：</strong>フォーム入力は5分程度。承認まで約1営業日（土日・米国の祝日はカウントされません）。
+            </div>
+        </div>
+    </div>
+
+    <!-- デベロッパープログラムとは -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">💡</span>
+            <h2>デベロッパープログラムとは？</h2>
+        </div>
+        <div class="card-body">
+            <p>eBayが提供する<strong>無料の開発者向けプログラム</strong>です。登録すると、eBayの機能をプログラムから操作するための「APIキー」が発行されます。</p>
+
+            <p style="margin-top:16px;">APIキーがあると、たとえば次のようなことがツールから自動でできるようになります：</p>
+            <ul class="checklist" style="margin-top:12px;">
+                <li>シッピングポリシーの一括作成・更新</li>
+                <li>出品情報の自動送信</li>
+                <li>在庫・注文データの取得</li>
+            </ul>
+
+            <div class="note" style="margin-top:20px;">
+                <strong>費用：</strong>プログラムへの登録は<strong>完全無料</strong>です。通常のeBayアカウントがあれば申請できます。
+            </div>
+        </div>
+    </div>
+
+    <!-- 事前に用意するもの -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">📋</span>
+            <h2>事前に用意するもの</h2>
+        </div>
+        <div class="card-body">
+            <ul class="checklist">
+                <li><strong>eBayセラーアカウント</strong>（すでにお持ちのもの）</li>
+                <li><strong>メールアドレス</strong>（できればビジネス用。Gmailでも可）</li>
+            </ul>
+            <div class="note" style="margin-top:16px;">
+                <strong>ポイント：</strong>公式はビジネスメールアドレスを推奨していますが、GmailなどのフリーメールでもAプログラムに参加できます。
+            </div>
+        </div>
+    </div>
+
+    <!-- 登録手順 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">📝</span>
+            <h2>登録手順（5ステップ）</h2>
+        </div>
+        <div class="card-body">
+
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-text">
+                    <h4>登録ページを開く</h4>
+                    <p>下のボタンから登録フォームにアクセスします。</p>
+                    <a class="btn" href="https://developer.ebay.com/signin?tab=register" target="_blank" rel="noopener">登録フォームを開く（eBay公式）</a>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-text">
+                    <h4>メールアドレスを入力する</h4>
+                    <p>「Email address」欄にメールアドレスを入力し、「Re-enter email address」欄にもう一度同じアドレスを入力します。</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-text">
+                    <h4>利用規約に同意する</h4>
+                    <p>「eBay API License Agreement」のチェックボックスにチェックを入れます。</p>
+                    <div class="note">規約内容は英語ですが、APIを使ってツールを作ること・安全に利用することへの同意です。</div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-text">
+                    <h4>ロボットでないことを確認する</h4>
+                    <p>「I'm not a robot」のチェックボックスにチェックを入れます（reCAPTCHA）。</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-text">
+                    <h4>「Join」ボタンを押して送信する</h4>
+                    <p>フォームを送信します。<strong>約1営業日後</strong>に承認メールが届きます。</p>
+                    <div class="success" style="margin-top:12px;">承認されると、登録したメールアドレスに通知が届きます。届いたらステップ2（APIキー取得）に進みましょう。</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- APIキーの取得 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🔑</span>
+            <h2>承認後：APIキーセットの作成</h2>
+        </div>
+        <div class="card-body">
+            <p>承認メールが届いたら、eBayデベロッパーサイトにサインインしてAPIキーを取得します。</p>
+
+            <div style="margin-top:20px;">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-text">
+                        <h4>デベロッパーサイトにサインインする</h4>
+                        <p><a href="https://developer.ebay.com/" target="_blank" rel="noopener">developer.ebay.com</a> にアクセスし、登録したメールアドレスでサインインします。</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-text">
+                        <h4>「Application Keys」ページに移動する</h4>
+                        <p>サインイン後、「My Account」または「Hi Keys」から「Application Keys」ページに移動します。</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-text">
+                        <h4>アプリ名を入力してキーセットを作成する</h4>
+                        <p>アプリケーション名（任意）を入力し、「Production」の下にある「<strong>Create a keyset</strong>」ボタンをクリックします。</p>
+                        <div class="note" style="margin-top:10px;">
+                            <strong>Sandbox と Production の違い：</strong><br>
+                            ・<strong>Sandbox</strong>：テスト用（実際のeBayに影響しない）<br>
+                            ・<strong>Production</strong>：実際のeBayアカウントに接続する本番用
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-text">
+                        <h4>マーケットプレイス通知の設定をする</h4>
+                        <p>Productionキーセットを使う前に、eBayから「アカウント削除通知」を受け取る設定が必要です。「Your Keyset is currently disabled」と表示された場合は、リンクをクリックして設定を完了してください。</p>
+                        <div class="warning">
+                            <strong>注意：</strong>この設定を完了しないとProductionキーが使えません。必ず手順通りに設定してください。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success" style="margin-top:8px;">
+                キーセットが作成されると「App ID（Client ID）」「Dev ID」「Cert ID（Client Secret）」の3つが発行されます。これをツールに設定すれば連携完了です。
+            </div>
+        </div>
+    </div>
+
+    <!-- よくある疑問 -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">❓</span>
+            <h2>よくある疑問</h2>
+        </div>
+        <div class="card-body">
+
+            <div class="faq-item">
+                <div class="faq-q">登録に費用はかかりますか？</div>
+                <div class="faq-a">完全無料です。クレジットカードの登録も不要です。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">承認に何日かかりますか？</div>
+                <div class="faq-a">通常、申請から約1営業日（米国時間）です。土日・祝日は含まれません。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">通常のeBayアカウントとは別のアカウントが必要ですか？</div>
+                <div class="faq-a">いいえ。デベロッパーアカウントは既存のeBayアカウントとは別の登録です。同じメールアドレスで登録できます。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">App ID・Dev ID・Cert ID はどこで確認できますか？</div>
+                <div class="faq-a">サインイン後、「Application Keys」ページで確認できます。他人に見せないように保管してください。</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-q">APIキーを使えるのは自分のeBayアカウントだけですか？</div>
+                <div class="faq-a">はい。発行されたAPIキーは、登録したデベロッパーアカウントに紐づいたeBayアカウントでのみ使用できます。</div>
+            </div>
+
+        </div>
+    </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+    <p>情報は <a href="https://developer.ebay.com/" target="_blank" rel="noopener">eBay Developers Program</a> 公式ドキュメントに基づいています。</p>
+    <p style="margin-top:6px;">© naokijodan</p>
+</div>
+
+</body>
+</html>
