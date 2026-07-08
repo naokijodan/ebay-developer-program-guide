@@ -417,10 +417,27 @@
                 <div class="step">
                     <div class="step-num">4</div>
                     <div class="step-text">
-                        <h4>マーケットプレイス通知の設定をする</h4>
-                        <p>Productionキーセットを使う前に、eBayから「アカウント削除通知」を受け取る設定が必要です。「Your Keyset is currently disabled」と表示された場合は、リンクをクリックして設定を完了してください。</p>
-                        <div class="warning">
-                            <strong>注意：</strong>この設定を完了しないとProductionキーが使えません。必ず手順通りに設定してください。
+                        <h4>「データ保存なし」で免除申請をする</h4>
+                        <p>キーセット作成後、「Your Keyset is currently disabled」と表示されます。これはeBayの<strong>プライバシー規制への対応</strong>として、全開発者に義務付けられている設定です。</p>
+
+                        <div class="note" style="margin-top:12px;">
+                            <strong>これは何？：</strong>eBayユーザーが「自分のデータを消してほしい」と申請したとき、eBayが開発者に通知を送る仕組みです。自前サーバーにバイヤーのデータを保存している開発者は、この通知を受け取って削除対応する必要があります。
+                        </div>
+
+                        <p style="margin-top:14px;"><strong>スクリプトを使うだけの個人セラーは「免除申請」でOKです。</strong>バイヤーのデータを自分のサーバーに保存しているわけではないので、以下の手順で免除を申請します：</p>
+
+                        <ol style="margin:12px 0 0 20px; font-size:0.93rem; color:#555; line-height:2;">
+                            <li>表示されたリンクをクリックして設定ページを開く</li>
+                            <li>「<strong>Not persisting eBay data</strong>」トグルをオンにする</li>
+                            <li>表示される確認ダイアログで「<strong>Confirm</strong>」をクリック</li>
+                            <li>免除理由を選択して「<strong>Submit</strong>」をクリック</li>
+                        </ol>
+
+                        <div class="success" style="margin-top:14px;">
+                            Submitが完了するとキーセットが有効になります。
+                        </div>
+                        <div class="warning" style="margin-top:10px;">
+                            <strong>注意：</strong>この手続きをしないとProductionキーが使えません。必ず完了させてください。
                         </div>
                     </div>
                 </div>
